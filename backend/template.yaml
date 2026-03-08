@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Restaurant CRM Backend - FastAPI on AWS Lambda
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.11
+
+Resources:
+  RestaurantCRMFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.main.handler
+      CodeUri: .
+      Description: Restaurant CRM FastAPI Backend
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+          API_KEY: !Ref ApiKey
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
+          ENVIRONMENT: production
+      Events:
+        ApiGatewayProxy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+        ApiGatewayRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+
+Parameters:
+  MongoUrl:
+    Type: String
+    Description: MongoDB connection string
+  ApiKey:
+    Type: String
+    Description: API Key for authentication
+    NoEcho: true
+  AllowedOrigins:
+    Type: String
+    Description: Comma-separated list of allowed origins
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
