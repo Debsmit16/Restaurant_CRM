@@ -292,11 +292,12 @@ npm run dev
 # Production build
 npm run build
 
-# Deploy to Vercel
-vercel --prod
+# Deploy to AWS S3 + CloudFront
+aws s3 sync out/ s3://your-tablecrm-bucket --delete
+aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 ```
 
-Set Vercel environment variables:
+Set environment variables **before building**:
 
 | Variable               | Value                    |
 |------------------------|--------------------------|

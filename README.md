@@ -11,7 +11,7 @@ A production-grade full-stack Restaurant CRM with a modern SaaS dashboard, secur
 ```mermaid
 graph TD
     A["Browser"] --> B["CloudFront CDN"]
-    B --> C["Lambda Edge - Next.js SSR"]
+    B --> C["S3 - Next.js Static"]
     B --> D["API Gateway"]
     D --> E["AWS Lambda - FastAPI"]
     E --> F["MongoDB Atlas"]
@@ -27,7 +27,7 @@ graph TD
 ### Local Development Architecture
 
 ```
-Browser → Next.js (localhost:3000) → FastAPI (localhost:8000) → MongoDB (localhost:27017)
+Browser → Next.js (localhost:3000) → FastAPI (localhost:8001) → MongoDB Atlas
 ```
 
 ## Tech Stack
@@ -39,7 +39,7 @@ Browser → Next.js (localhost:3000) → FastAPI (localhost:8000) → MongoDB (l
 | Backend    | FastAPI, Pydantic, Motor (async MongoDB)            |
 | Database   | MongoDB                                             |
 | Security   | API Key, Origin validation, User-Agent check        |
-| Infra      | AWS Lambda, API Gateway, CloudFront                 |
+| Infra      | AWS Lambda, API Gateway, S3, CloudFront             |
 
 ## Features
 
@@ -99,7 +99,7 @@ Open: `http://localhost:3000`
 
 | Variable               | Description      | Default                       |
 |------------------------|------------------|-------------------------------|
-| `NEXT_PUBLIC_API_URL`  | Backend API URL  | `http://localhost:8000`       |
+| `NEXT_PUBLIC_API_URL`  | Backend API URL  | `http://localhost:8001`       |
 | `NEXT_PUBLIC_API_KEY`  | API key          | `restaurant-secret-key-2024` |
 
 ## API Endpoints
@@ -152,7 +152,7 @@ Set these Lambda environment variables:
 |-------------------|------------------------------------------|
 | `MONGO_URL`       | Your MongoDB Atlas connection string     |
 | `API_KEY`         | A strong, unique API key                 |
-| `ALLOWED_ORIGINS` | Your frontend domain (e.g. `https://your-app.vercel.app`) |
+| `ALLOWED_ORIGINS` | Your CloudFront domain (e.g. `https://d1234.cloudfront.net`) |
 | `ENVIRONMENT`     | `production`                             |
 
 Verify deployment:
@@ -162,19 +162,22 @@ curl https://<api-gateway-url>/health
 curl https://<api-gateway-url>/health/db
 ```
 
-### Frontend — Vercel
+### Frontend — AWS S3 + CloudFront
 
 ```bash
 cd frontend
 
-# Install Vercel CLI (if not installed)
-npm i -g vercel
+# Build the static export
+npm run build
 
-# Deploy
-vercel --prod
+# Upload to S3
+aws s3 sync out/ s3://your-tablecrm-bucket --delete
+
+# Invalidate CloudFront cache
+aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 ```
 
-Set these **Vercel environment variables** in the project settings:
+Set these environment variables **before building**:
 
 | Variable               | Value                                       |
 |------------------------|---------------------------------------------|
@@ -185,7 +188,7 @@ Set these **Vercel environment variables** in the project settings:
 
 - [ ] Set `ENVIRONMENT=production` on Lambda
 - [ ] Use a strong, unique `API_KEY` (not the default dev key)
-- [ ] Set `ALLOWED_ORIGINS` to your Vercel domain only
+- [ ] Set `ALLOWED_ORIGINS` to your CloudFront domain only
 - [ ] Verify `/health/db` returns `"database": "connected"`
 - [ ] Test demo data generation from the dashboard
 - [ ] Confirm Swagger docs are disabled (`/docs` returns 404)
