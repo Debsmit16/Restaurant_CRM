@@ -10,11 +10,11 @@ A production-grade full-stack Restaurant CRM with a modern SaaS dashboard, secur
 
 ```mermaid
 graph TD
-    A[Browser] --> B[CloudFront CDN]
-    B --> C[Lambda@Edge - Next.js SSR]
-    B --> D[API Gateway]
-    D --> E[AWS Lambda - FastAPI]
-    E --> F[MongoDB Atlas]
+    A["Browser"] --> B["CloudFront CDN"]
+    B --> C["Lambda Edge - Next.js SSR"]
+    B --> D["API Gateway"]
+    D --> E["AWS Lambda - FastAPI"]
+    E --> F["MongoDB Atlas"]
 
     style A fill:#f97316,stroke:#ea580c,color:#fff
     style B fill:#3b82f6,stroke:#2563eb,color:#fff
