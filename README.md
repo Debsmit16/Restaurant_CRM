@@ -1,10 +1,16 @@
 # TableCRM — Restaurant Customer Management System
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Debsmit16/Restaurant_CRM)
+[![Frontend](https://img.shields.io/badge/Frontend-Live-000?logo=vercel)](https://restaurant-crm-kohl.vercel.app/)
+[![Backend](https://img.shields.io/badge/Backend-Live-46E3B7?logo=render)](https://restaurant-crm-7oem.onrender.com/)
 
 A production-grade full-stack Restaurant CRM with a modern SaaS dashboard, secure REST API, MongoDB persistence, and AWS Lambda deployment configuration.
 
-**Repository:** [https://github.com/Debsmit16/Restaurant_CRM](https://github.com/Debsmit16/Restaurant_CRM)
+| | URL |
+|---|---|
+| 🌐 **Live App** | [https://restaurant-crm-kohl.vercel.app](https://restaurant-crm-kohl.vercel.app/) |
+| ⚡ **API** | [https://restaurant-crm-7oem.onrender.com](https://restaurant-crm-7oem.onrender.com/) |
+| 📦 **Repository** | [https://github.com/Debsmit16/Restaurant_CRM](https://github.com/Debsmit16/Restaurant_CRM) |
 
 ## Architecture
 
